@@ -474,8 +474,15 @@ public class Printer {
         }
     }
 
+      public void setChinese() throws IOException {
+        byte[] buf = new byte[]{0x1C, 0x26};
+        synchronized(this) {
+            this.write(buf);
+        }
+    }
+
     public void selectCodetable(int codetable) throws IOException {
-        byte[] buf = new byte[]{(byte)27, (byte)117, (byte)codetable};
+        byte[] buf = new byte[]{0x1B, 0x39, (byte)codetable};
         if(codetable < 0) {
             throw new IllegalArgumentException("The codetable is negative");
         } else {
@@ -733,6 +740,8 @@ public class Printer {
     }
 
     public void printTaggedText(String s, String encoding) throws IOException {
+        this.setChinese();
+        this.selectCodetable(1);
         if(s == null) {
             throw new NullPointerException("The s is null");
         } else {
